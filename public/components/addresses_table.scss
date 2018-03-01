@@ -1,0 +1,29 @@
+table.addresses {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  thead {
+    tr {
+      background-color: #fff;
+      border-top: 1px solid #c6cbd1;
+    }
+  }
+  tbody {
+    tr {
+      border-top: 1px solid #c6cbd1;
+      &:nth-child(odd) {
+        background: #fff;
+      }
+
+      &:nth-child(even) {
+        background: #dfe2e5;
+      }
+    }
+  }
+
+  th,
+  td {
+    padding: 6px 13px;
+    border: 1px solid #c6cbd1;
+  }
+}
