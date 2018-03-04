@@ -20,6 +20,10 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/
       }, {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: ['eslint-loader']
+      }, {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",

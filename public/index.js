@@ -17,9 +17,9 @@ ReactDOM.render((
   <Provider store={createStore(reducers)}>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={()=><App db={db}></App>}/>
-        <Route path="/add" component={()=><AddAddress db={db}></AddAddress>}/>
-        <Route path={"/edit/:id"} component={()=><EditAddress db={db}></EditAddress>}/>
+        <Route exact path='/' component={() => <App db={db}></App>}/>
+        <Route path='/add' component={() => <AddAddress db={db}></AddAddress>}/>
+        <Route path={'/edit/:id'} component={() => <EditAddress db={db}></EditAddress>}/>
       </Switch>
     </BrowserRouter>
   </Provider>

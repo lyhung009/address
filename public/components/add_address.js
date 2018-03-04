@@ -2,25 +2,22 @@ const React = require('react');
 const AddressForm = require('./address_form');
 const {withRouter} = require('react-router-dom');
 const {connect} = require('react-redux');
-const {addAddressActionCreator} = require('../reducers/addresses');
 
 class AddAddress extends React.Component {
-  addressesRef;
-
-  constructor(props){
+  constructor (props) {
     super(props);
     this.addressesRef = this.props.db.database().ref('addresses');
   }
-  goBack() {
+  goBack () {
     this.props.history.goBack();
   }
 
-  addAddress(address){
+  addAddress (address) {
     this.addressesRef.push(address);
     this.goBack();
   }
 
-  render() {
+  render () {
     return (
       <div>
         <h1 className="title">Add new address</h1>

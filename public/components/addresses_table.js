@@ -3,12 +3,11 @@ const {Link} = require('react-router-dom');
 require('./addresses_table.scss');
 
 class AddressesTable extends React.Component {
-
-  onDelete(evt, id) {
+  onDelete (evt, id) {
     evt.preventDefault();
     this.props.onDelete(id);
   }
-  render() {
+  render () {
     const addresses = this
       .props
       .addresses

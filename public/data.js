@@ -1,17 +1,8 @@
-export const addresses = [
-  {
-    id: 1,
-    street: "72 Le Thanh Ton",
-    ward: "Ben Nghe ward",
-    district: "District 1",
-    city: "Ho Chi Minh city",
-    country: "Vietnam"
-  }, {
-    id: 2,
-    street: "138 Hai Ba Trung",
-    ward: "Da Kao ward",
-    district: "District 1",
-    city: "Ho Chi Minh city",
-    country: "Vietnam"
-  }
+const headers = [
+  {label: 'Street Name', key: 'street'},
+  {label: 'Ward', key: 'ward'},
+  {label: 'District', key: 'district'},
+  {label: 'City', key: 'city'},
+  {label: 'Country', key: 'country'},
 ];
+module.exports = headers;

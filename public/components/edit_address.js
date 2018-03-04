@@ -5,9 +5,7 @@ const {connect} = require('react-redux');
 const {editAddressActionCreator, fetchAddressActionCreator} = require('../reducers/addresses');
 
 class EditAddress extends React.Component {
-  addressesRef;
-
-  constructor(props){
+  constructor (props) {
     super(props);
     this.addressesRef = this.props.db.database().ref('addresses');
     this.addressesRef.on('value', snapshot => {
@@ -18,17 +16,17 @@ class EditAddress extends React.Component {
       .dispatch(fetchAddressActionCreator(address));
     });
   }
-  goBack() {
+  goBack () {
     this.props.history.goBack();
   }
 
-  editAddress(address){
+  editAddress (address) {
     let childRef = this.props.db.database().ref('addresses').child(this.props.match.params.id);
     childRef.update(address);
     this.goBack();
   }
 
-  render() {
+  render () {
     return (
       <div>
         <h1 className="title">Edit address</h1>
@@ -39,6 +37,6 @@ class EditAddress extends React.Component {
   }
 }
 
-module.exports = withRouter(connect(state=>({
+module.exports = withRouter(connect(state => ({
   address: state.addresses.current
 }))(EditAddress));

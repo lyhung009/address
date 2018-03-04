@@ -1,38 +1,54 @@
 const React = require('react');
-const {addresses} = require('../data');
 const AddressTable = require('./addresses_table');
 const {BrowserRouter, Route, Link, Redirect} = require('react-router-dom');
 const {fetchAddressesActionCreator} = require('../reducers/addresses');
 const {connect} = require('react-redux');
 const firebase = require('firebase');
 const config = require('../firebase.config');
-const {handleAddresses} = require('./util');
+const {handleAddresses, prepareCSVData} = require('./util');
+const {CSVLink} = require('react-csv');
 
 class App extends React.Component {
-  addressesRef;
-  constructor(props){
+  constructor (props) {
     super(props);
-    this.addressesRef = this.props.db.database().ref('addresses');
-    this.addressesRef.on('value', snapshot => {
-      this
+    this.addressesRef = this
       .props
-      .dispatch(fetchAddressesActionCreator(handleAddresses(snapshot.val())));
-    });
+      .db
+      .database()
+      .ref('addresses');
+    this
+      .addressesRef
+      .on('value', snapshot => {
+        let data = handleAddresses(snapshot.val());
+        this
+          .props
+          .dispatch(fetchAddressesActionCreator(data));
+      });
   }
-  
-  deleteAddress(addressId){
-    let childRef = this.addressesRef.child(addressId);
+
+  deleteAddress (addressId) {
+    let childRef = this
+      .addressesRef
+      .child(addressId);
     childRef.remove();
   }
 
-  render() {
-    const {
+  render () {
+    let {
       addresses = []
     } = this.props;
+    let data = prepareCSVData(addresses);
     return (
       <div>
-        <Link to="/add">Add a new address</Link>
-        <AddressTable addresses={addresses} onDelete={this.deleteAddress.bind(this)}></AddressTable>
+        <Link to="/add">Add a new address</Link>&nbsp;
+        <CSVLink data={data} filename={'addresses.csv'}>
+          Export
+        </CSVLink>
+        <AddressTable
+          addresses={addresses}
+          onDelete={this
+          .deleteAddress
+          .bind(this)}></AddressTable>
       </div>
     );
   }

@@ -1,14 +1,13 @@
 const React = require('react');
-const {createClient} = require("@google/maps");
+const {createClient} = require('@google/maps');
 const key = require('../googlemaps.config');
 const {parseAddress} = require('./util');
-const {compose, withProps} = require("recompose");
-const {withScriptjs, withGoogleMap, GoogleMap, Marker} = require("react-google-maps");
+const {compose, withProps} = require('recompose');
+const {withScriptjs, withGoogleMap, GoogleMap, Marker} = require('react-google-maps');
 require('./address_form.scss');
 
 class AddressForm extends React.Component {
-  googleMapsClient;
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       fields: {
@@ -24,20 +23,20 @@ class AddressForm extends React.Component {
     this.googleMapsClient = createClient({key: key});
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     const {
       address = {
-        street : '',
-        ward : '',
-        district : '',
-        city : '',
-        country : ''
+        street: '',
+        ward: '',
+        district: '',
+        city: '',
+        country: ''
       }
     } = nextProps;
     this.handleAddressChange(address);
   }
 
-  handleAddressChange(address) {
+  handleAddressChange (address) {
     let fields = {
       street: address.street,
       ward: address.ward,
@@ -49,7 +48,7 @@ class AddressForm extends React.Component {
     this.setState({fields: fields});
   }
 
-  handleMapClick(evt) {
+  handleMapClick (evt) {
     let latitude = evt
       .latLng
       .lat();
@@ -59,13 +58,13 @@ class AddressForm extends React.Component {
     this.getLocationInformation(latitude, longitude);
   }
 
-  onInputChange(evt) {
+  onInputChange (evt) {
     const fields = this.state.fields;
     fields[evt.target.name] = evt.target.value;
     this.setState({fields});
   }
 
-  getLocationInformation(lat, lng) {
+  getLocationInformation (lat, lng) {
     this
       .googleMapsClient
       .reverseGeocode({
@@ -77,7 +76,7 @@ class AddressForm extends React.Component {
       });
   }
 
-  pickUpCurrentLocation() {
+  pickUpCurrentLocation () {
     if (navigator.geolocation) {
       navigator
         .geolocation
@@ -88,39 +87,43 @@ class AddressForm extends React.Component {
           this.getLocationInformation(latitude, longitude);
         });
     } else {
-      alert("Geolocation is not supported by this browser.");
+      alert('Geolocation is not supported by this browser.');
     }
   }
 
-  validate(address) {
+  validate (address) {
     const errors = {};
-    if (!address.street) 
+    if (!address.street) {
       errors.street = 'Street name is required';
+    }
     if (!address.city || address.city.trim() === '') {
-      if (!address.ward) 
+      if (!address.ward) {
         errors.ward = 'Ward is required';
-      if (!address.district) 
+      }
+      if (!address.district) {
         errors.district = 'District is required';
       }
+    }
     return errors;
   }
 
-  onFormSubmit(evt) {
+  onFormSubmit (evt) {
     const address = this.state.fields;
     const fieldErrors = this.validate(address);
     this.setState({fieldErrors});
 
     evt.preventDefault();
 
-    if (Object.keys(fieldErrors).length) 
+    if (Object.keys(fieldErrors).length) {
       return;
+    }
     
     this
       .props
       .onSubmit(address);
   }
 
-  render() {
+  render () {
     return (
       <div className="container">
         <div className="address-form">
@@ -227,7 +230,8 @@ class AddressForm extends React.Component {
 
 const MyMapComponent = compose(withProps({
   googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${key}
-      &v=3.exp&libraries=geometry,drawing,places`, loadingElement: <div style={{
+      &v=3.exp&libraries=geometry,drawing,places`, 
+  loadingElement: <div style={{
     height: `100%`
   }}/>,
   containerElement: <div style={{
