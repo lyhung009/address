@@ -1,6 +1,7 @@
 module.exports = {
   handleAddresses: (addresses) => {
-    if(!addresses) return [];
+    if (!addresses) 
+      return [];
     return Object
       .keys(addresses)
       .map(key => {
@@ -29,8 +30,8 @@ module.exports = {
       if (component.types[0] == 'street_number') {
         address.street = component.long_name;
       }
-      if (component.types[0] == 'route' && !address.street) {
-        address.street = component.long_name;
+      if (component.types[0] == 'route') {
+        address.street += ' ' + component.long_name;
       }
     });
 

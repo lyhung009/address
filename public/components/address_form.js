@@ -6,26 +6,6 @@ const {compose, withProps} = require("recompose");
 const {withScriptjs, withGoogleMap, GoogleMap, Marker} = require("react-google-maps");
 require('./address_form.scss');
 
-const MyMapComponent = compose(withProps({
-  googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${key}
-      &v=3.exp&libraries=geometry,drawing,places`, loadingElement: <div style={{
-    height: `100%`
-  }}/>,
-  containerElement: <div style={{
-    height: `400px`
-  }}/>,
-  mapElement: <div style={{
-      height: `100%`
-    }}/>
-}), withScriptjs, withGoogleMap)(props => (
-  <GoogleMap
-    defaultZoom={8}
-    defaultCenter={{
-    lat: 21.028511,
-    lng: 105.804817
-  }}></GoogleMap>
-));
-
 class AddressForm extends React.Component {
   googleMapsClient;
   constructor(props) {
@@ -69,10 +49,32 @@ class AddressForm extends React.Component {
     this.setState({fields: fields});
   }
 
+  handleMapClick(evt) {
+    let latitude = evt
+      .latLng
+      .lat();
+    let longitude = evt
+      .latLng
+      .lng();
+    this.getLocationInformation(latitude, longitude);
+  }
+
   onInputChange(evt) {
     const fields = this.state.fields;
     fields[evt.target.name] = evt.target.value;
     this.setState({fields});
+  }
+
+  getLocationInformation(lat, lng) {
+    this
+      .googleMapsClient
+      .reverseGeocode({
+        latlng: [lat, lng]
+      }, (err, response) => {
+        if (!err) {
+          this.handleAddressChange(parseAddress(response.json.results[0].address_components));
+        }
+      });
   }
 
   pickUpCurrentLocation() {
@@ -83,15 +85,7 @@ class AddressForm extends React.Component {
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
 
-          this
-            .googleMapsClient
-            .reverseGeocode({
-              latlng: [latitude, longitude]
-            }, (err, response) => {
-              if (!err) {
-                this.handleAddressChange(parseAddress(response.json.results[0].address_components));
-              }
-            });
+          this.getLocationInformation(latitude, longitude);
         });
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -219,12 +213,37 @@ class AddressForm extends React.Component {
         </div>
         <div className="map-section">
           <div id="map">
-            <MyMapComponent isMarkerShown={false}></MyMapComponent>
+            <MyMapComponent
+              isMarkerShown={false}
+              onMapClick={this
+              .handleMapClick
+              .bind(this)}></MyMapComponent>
           </div>
         </div>
       </div>
     )
   }
 }
+
+const MyMapComponent = compose(withProps({
+  googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${key}
+      &v=3.exp&libraries=geometry,drawing,places`, loadingElement: <div style={{
+    height: `100%`
+  }}/>,
+  containerElement: <div style={{
+    height: `400px`
+  }}/>,
+  mapElement: <div style={{
+      height: `100%`
+    }}/>
+}), withScriptjs, withGoogleMap)(props => (
+  <GoogleMap
+    onClick={props.onMapClick}
+    defaultZoom={15}
+    defaultCenter={{
+    lat: 10.762622,
+    lng: 106.660172
+  }}></GoogleMap>
+));
 
 module.exports = AddressForm;
