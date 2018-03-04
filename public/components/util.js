@@ -31,7 +31,7 @@ module.exports = {
         address.street = component.long_name;
       }
       if (component.types[0] == 'route' && component.long_name) {
-        address.street += ' ' + component.long_name;
+        address.street += (' ' + component.long_name);
       }
     });
 
