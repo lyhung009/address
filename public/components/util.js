@@ -15,23 +15,24 @@ module.exports = {
   parseAddress: (addressComponents) => {
     let address = {};
     addressComponents.forEach(component => {
-      if (component.types[0] == 'country' && component.long_name) {
+      if (component.types[0] == 'country') {
         address.country = component.long_name;
       }
-      if (component.types[0] == 'administrative_area_level_1' && component.long_name) {
+      if (component.types[0] == 'administrative_area_level_1') {
         address.city = component.long_name;
       }
-      if (component.types[0] == 'administrative_area_level_2' && component.long_name) {
+      if (component.types[0] == 'administrative_area_level_2') {
         address.district = component.long_name;
       }
-      if (component.types[0] == 'administrative_area_level_3' && component.long_name) {
+      if (component.types[0] == 'administrative_area_level_3') {
         address.ward = component.long_name;
       }
-      if (component.types[0] == 'street_number' && component.long_name) {
+      if (component.types[0] == 'street_number') {
         address.street = component.long_name;
       }
-      if (component.types[0] == 'route' && component.long_name) {
-        address.street += (' ' + component.long_name);
+      if (component.types[0] == 'route') {
+        if(address.street) address.street += ' ' + component.long_name;
+        else address.street = component.long_name;
       }
     });
 
