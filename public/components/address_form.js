@@ -199,7 +199,7 @@ class AddressForm extends React.Component {
                   value="Pick up current location"
                   onClick={this
                   .pickUpCurrentLocation
-                  .bind(this)}/><input type="button" value="Pick up on map" className="cancel"/><br/>
+                  .bind(this)}/> or pick up a location on Map<br/>
                 <br/>
                 <input type="submit" value="Submit"/>
                 <input
