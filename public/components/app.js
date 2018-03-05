@@ -7,6 +7,7 @@ const firebase = require('firebase');
 const config = require('../firebase.config');
 const {handleAddresses, prepareCSVData} = require('./util');
 const {CSVLink} = require('react-csv');
+require('./app.scss');
 
 class App extends React.Component {
   constructor (props) {
@@ -39,7 +40,7 @@ class App extends React.Component {
     } = this.props;
     let data = prepareCSVData(addresses);
     return (
-      <div>
+      <div className='app'>
         <Link to="/add">Add a new address</Link>&nbsp;
         <CSVLink data={data} filename={'addresses.csv'}>
           Export
