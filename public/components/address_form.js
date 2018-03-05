@@ -47,6 +47,14 @@ class AddressForm extends React.Component {
     }, 1000);
   }
 
+  componentDidMount() { 
+    this.componentIsMounted = true;
+  }
+  
+  componentWillUnmount() {
+     this.componentIsMounted = false;
+  }
+
   handleAddressChange (address, onPropsChange = true) {
     let fields = {
       street: address.street,
@@ -65,8 +73,10 @@ class AddressForm extends React.Component {
           if (response.json.results.length > 0) {
             let location = response.json.results[0].geometry.location;
             let markerLatLong = [location.lat, location.lng];
-            this.setState({markerLatLong: markerLatLong});
+            if (this.componentIsMounted) {
+              this.setState({markerLatLong: markerLatLong});
           }
+        }
         }
       })
     }

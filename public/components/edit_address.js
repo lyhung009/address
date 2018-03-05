@@ -10,10 +10,12 @@ class EditAddress extends React.Component {
     this.addressesRef = this.props.db.database().ref('addresses');
     this.addressesRef.on('value', snapshot => {
       let address = snapshot.val()[this.props.match.params.id];
-      address.id = this.props.match.params.id;
-      this
-      .props
-      .dispatch(fetchAddressActionCreator(address));
+      if (address) {
+        address.id = this.props.match.params.id;
+        this
+        .props
+        .dispatch(fetchAddressActionCreator(address));
+      }
     });
   }
   goBack () {
