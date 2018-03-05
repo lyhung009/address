@@ -6,8 +6,6 @@
       text-align: center;
     }
     .form-list {
-      margin-left: 50px;
-      max-width: 100%;
       padding: 20px 12px 10px 20px;
       li {
         padding: 0;
@@ -66,5 +64,16 @@
   .map-section {
     float: left;
     width: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    .address-form{
+      width: 100%;
+    }
+    .map-section{
+      width: 100%;
+    }
   }
 }
