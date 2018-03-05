@@ -17,6 +17,7 @@ class AddressForm extends React.Component {
         city: '',
         country: ''
       },
+      markerLatLong: [10.762622, 106.660172],
       fieldErrors: {}
     };
 
@@ -36,7 +37,7 @@ class AddressForm extends React.Component {
     this.handleAddressChange(address);
   }
 
-  handleAddressChange (address) {
+  handleAddressChange (address, onPropsChange = true) {
     let fields = {
       street: address.street,
       ward: address.ward,
@@ -45,6 +46,20 @@ class AddressForm extends React.Component {
       country: address.country
     };
 
+    if (onPropsChange) {
+      this.googleMapsClient.geocode({
+        address: [address.street, address.ward, address.district, address.city, address.country]
+                .filter(item => !!item).join(', ')
+      }, (err, response) => {
+        if (!err) {
+          if (response.json.results.length > 0) {
+            let location = response.json.results[0].geometry.location;
+            let markerLatLong = [location.lat, location.lng];
+            this.setState({markerLatLong: markerLatLong});
+          }
+        }
+      })
+    }
     this.setState({fields: fields});
   }
 
@@ -55,6 +70,8 @@ class AddressForm extends React.Component {
     let longitude = evt
       .latLng
       .lng();
+    let markerLatLong = [latitude, longitude];
+    this.setState({markerLatLong: markerLatLong});
     this.getLocationInformation(latitude, longitude);
   }
 
@@ -71,7 +88,7 @@ class AddressForm extends React.Component {
         latlng: [lat, lng]
       }, (err, response) => {
         if (!err) {
-          this.handleAddressChange(parseAddress(response.json.results[0].address_components));
+          this.handleAddressChange(parseAddress(response.json.results[0].address_components), false);
         }
       });
   }
@@ -83,6 +100,9 @@ class AddressForm extends React.Component {
         .getCurrentPosition(position => {
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
+          
+          let markerLatLong = [latitude, longitude];
+          this.setState({markerLatLong: markerLatLong});
 
           this.getLocationInformation(latitude, longitude);
         });
@@ -216,11 +236,10 @@ class AddressForm extends React.Component {
         </div>
         <div className="map-section">
           <div id="map">
-            <MyMapComponent
-              isMarkerShown={false}
+            <MyMapComponent isMarkerShown={true}
               onMapClick={this
               .handleMapClick
-              .bind(this)}></MyMapComponent>
+              .bind(this)} markerLatLong={this.state.markerLatLong}></MyMapComponent>
           </div>
         </div>
       </div>
@@ -244,10 +263,12 @@ const MyMapComponent = compose(withProps({
   <GoogleMap
     onClick={props.onMapClick}
     defaultZoom={15}
-    defaultCenter={{
-    lat: 10.762622,
-    lng: 106.660172
-  }}></GoogleMap>
+    center={{
+    lat: props.markerLatLong[0],
+    lng: props.markerLatLong[1]
+  }}>
+  {props.isMarkerShown && <Marker position={{ lat: props.markerLatLong[0], lng: props.markerLatLong[1] }} />}
+  </GoogleMap>
 ));
 
 module.exports = AddressForm;
