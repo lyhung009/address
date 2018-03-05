@@ -4,6 +4,7 @@ const key = require('../googlemaps.config');
 const {parseAddress} = require('./util');
 const {compose, withProps} = require('recompose');
 const {withScriptjs, withGoogleMap, GoogleMap, Marker} = require('react-google-maps');
+const _ = require('lodash');
 require('./address_form.scss');
 
 class AddressForm extends React.Component {
@@ -35,6 +36,15 @@ class AddressForm extends React.Component {
       }
     } = nextProps;
     this.handleAddressChange(address);
+  }
+
+  componentWillMount() {
+    this.delayedOnInputChange = _.throttle((evt) => {
+      let errors = this.validate(this.state.fields);
+      if (Object.keys(errors).length === 0) {
+        this.handleAddressChange(this.state.fields);
+      }
+    }, 1000);
   }
 
   handleAddressChange (address, onPropsChange = true) {
@@ -76,9 +86,12 @@ class AddressForm extends React.Component {
   }
 
   onInputChange (evt) {
+    evt.persist();
     const fields = this.state.fields;
     fields[evt.target.name] = evt.target.value;
     this.setState({fields});
+
+    this.delayedOnInputChange(evt);
   }
 
   getLocationInformation (lat, lng) {
@@ -100,7 +113,7 @@ class AddressForm extends React.Component {
         .getCurrentPosition(position => {
           let latitude = position.coords.latitude;
           let longitude = position.coords.longitude;
-          
+
           let markerLatLong = [latitude, longitude];
           this.setState({markerLatLong: markerLatLong});
 

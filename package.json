@@ -36,6 +36,7 @@
   "dependencies": {
     "@google/maps": "0.4.5",
     "firebase": "4.10.1",
+    "lodash": "4.17.5",
     "react": "16.2.0",
     "react-csv": "1.0.12",
     "react-dom": "16.2.0",
